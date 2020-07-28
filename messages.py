@@ -1,30 +1,22 @@
-import pymongo
 from datetime import datetime, timedelta
-from bson import Int64
+import sqlite3
+import time
+import os
 
+os.system("msg_sync.py")
 
-def ticks_to_datetime(ticks):
-    return datetime(1, 1, 1) + timedelta(microseconds=ticks / 10)
+conn = sqlite3.connect('child.db')
+c = conn.cursor()
 
-
-client_web = pymongo.MongoClient(
-    "mongodb+srv://CCI:root@cluster0.4gzmr.mongodb.net/Jhansi?retryWrites=true&w=majority")
-db = client_web["CARE"]
-col = db["messages"]
-f = open("CCI.txt", "r")
-lines = list(f)
-cci_id = lines[0].rstrip("\n")
-f.close()
-query = {"cci_id": f"{cci_id}"}
-doc = col.find_one(query, {"_id": 0, "__v": 0})
-print(doc)
-obj = {
-    "time": datetime.today(),
-    "message" : "Hey There time using datetime.today()!!!"
-}
-
-result = col.find_one_and_update(query,{'$push':{"Messages": obj}})
-
-# old_time = record['old_time'][0]
-# new_time = ticks_to_datetime(old_time)
-# print(new_time)
+key = 'y'
+while( key!= 'q'):
+    print("Enter message")
+    msg = input()
+    c.execute('''INSERT INTO messages VALUES (?, ?, ?)''', (msg, "cci", time.time()*1000))
+    c.execute('''SELECT * FROM messages ORDER BY TIME ASC''')
+    for row in c.fetchall():
+        print(row)
+    key = input().strip()
+    
+conn.commit()
+conn.close()

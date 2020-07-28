@@ -24,6 +24,11 @@ c.execute('''CREATE TABLE IF NOT EXISTS attendance
             ATTEND BOOLEAN DEFAULT "False" NOT NULL ,
             SYNCED BOOLEAN DEFAULT "False");''')
 
+c.execute('''CREATE TABLE IF NOT EXISTS messages(
+             MSG TEXT,
+             SENDER TEXT NOT NULL,
+             TIME REAL NOT NULL);''')
+
 c = conn.execute('''SELECT C_ID FROM details;''')
 rows = c.fetchall()
 l = []
