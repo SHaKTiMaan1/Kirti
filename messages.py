@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
 import sqlite3
 import time
-import os
-
-os.system("msg_sync.py")
 
 conn = sqlite3.connect('child.db')
 c = conn.cursor()
@@ -16,7 +13,8 @@ while( key!= 'q'):
     c.execute('''SELECT * FROM messages ORDER BY TIME ASC''')
     for row in c.fetchall():
         print(row)
+    conn.commit()
     key = input().strip()
     
-conn.commit()
+
 conn.close()

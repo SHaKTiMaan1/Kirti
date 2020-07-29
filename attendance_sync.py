@@ -54,21 +54,22 @@ for i in range(n):
         "data" : ls
     }
     l.append(attendance_obj)
-    c.execute("UPDATE attendance SET SYNCED = 'True' WHERE DATE = '%s'" %working_date)
 
 while len(l)>0:
     IPaddress = socket.gethostbyname(socket.gethostname())
     if IPaddress != "127.0.0.1":
         #Connecting to the mongodb atlas
-        client_web = pymongo.MongoClient("mongodb+srv://CCI:root@cluster0.4gzmr.mongodb.net/Jhansi?retryWrites=true&w=majority")
-        db = client_web["Jhansi"]
+        client_web = pymongo.MongoClient("mongodb+srv://CCI:root@cluster0.4gzmr.mongodb.net/CARE?retryWrites=true&w=majority")
+        db = client_web["CARE"]
         col = db["ccis"]
         query = {"cci_id": f"{cci_id}"}
         for obj in l :
             result = col.update_one(query, {'$push': {"attendance": obj}})
         if result.modified_count > 0:
             l.clear()
-    
+            c.execute(
+                " UPDATE attendance SET SYNCED = 'True' WHERE DATE != '%s' " % d)
+        conn.commit()
     else:
         time.sleep(20)
 

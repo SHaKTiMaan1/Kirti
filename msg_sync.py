@@ -42,7 +42,7 @@ while True:
             c.execute('''INSERT INTO messages VALUES(
                         ?, ?, ?)''',(message["message"], message["sender"], message["time"]))
             t = message["time"]
-        
+    conn.commit()    
     #milliseconds
     f = open("last_time.txt", "w+")
     f.write(str(t))
@@ -62,4 +62,5 @@ while True:
                 "sender": row[1],
                 "message": row[0]}
             result = col.find_one_and_update(query, {'$push': {"Messages": obj}})
+    
     time.sleep(1)
