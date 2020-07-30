@@ -73,10 +73,10 @@ if IPaddress != "127.0.0.1":
     #Checking for children who left cci and replacing them from main database to another database
     for x in l_local:
         if x not in l_web:
-            c.execute('''SELECT * FROM details WHERE C_ID = ? ''', (x))
+            c.execute('''SELECT * FROM details WHERE C_ID = '%s' ''' % x)
             row = c.fetchone()
             c.execute('''INSERT INTO leftdetails VALUES (?, ?, ?, ?, ?, ?, ?, ?)''' , (row))
-            c.execute('''DELETE * FROM details WHERE C_ID = ? ''', (x))
+            c.execute('''DELETE * FROM details WHERE C_ID = '%s' ''' % x)
 
 
 
