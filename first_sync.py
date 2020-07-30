@@ -62,7 +62,7 @@ if IPaddress != "127.0.0.1":
     doc = col.find({"cci_id": f"{cci_id}"}, {"_id": 0, "__v":0})
     for x in doc:
         l_web.append(x["C_Id"])
-        if(x["C_Id"] not in l):
+        if(x["C_Id"] not in l_local):
             c.execute('''INSERT INTO details(FNAME, LNAME, C_ID, AGE, DOR, GENDER, WITNESS, SET_EXIST)
                         VALUES(?, ?, ?, ?, ?, ?, ?, ?)''', 
                         (x["fname"], x["lname"], x["C_Id"], x["age"], x["reg_date"], x["gender"], x["witness"],"False"))
@@ -73,10 +73,10 @@ if IPaddress != "127.0.0.1":
     #Checking for children who left cci and replacing them from main database to another database
     for x in l_local:
         if x not in l_web:
-            c.execute('''SELECT * FROM details WHERE C_ID = '%s' ''', % x)
+            c.execute('''SELECT * FROM details WHERE C_ID = ? ''', (x))
             row = c.fetchone()
             c.execute('''INSERT INTO leftdetails VALUES (?, ?, ?, ?, ?, ?, ?, ?)''' , (row))
-            c.execute('''DELETE * FROM details WHERE C_ID = '%s' ''', % x)
+            c.execute('''DELETE * FROM details WHERE C_ID = ? ''', (x))
 
 
 
