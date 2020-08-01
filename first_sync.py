@@ -37,6 +37,14 @@ c.execute('''CREATE TABLE IF NOT EXISTS leftdetails
             WITNESS CHAR(25) NOT NULL,
             SET_EXIST BOOLEAN);''')
 
+c.execute('''CREATE TABLE in_and_out(
+             C_ID TEXT NOT NULL,
+             DATE_OUT TEXT,
+             TIME_OUT TEXT,
+             DATE_IN TEXT,
+             TIME_IN TEXT,
+             SYNCED BOOLEAN DEFAULT "False");''')
+
 
 IPaddress = socket.gethostbyname(socket.gethostname())
 
