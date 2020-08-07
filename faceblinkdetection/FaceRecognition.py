@@ -54,13 +54,7 @@ def init():
         
     model = load_model()
 
-    # print("[LOG] Collecting images...")
-    # images = []
-    # for direc, _, files in tqdm(os.walk(dataset)):
-    #     for file in files:
-    #         if file.endswith("png"):
-    #             images.append(os.path.join(direc,file))
-    return (model, face_detector, open_eyes_detector, left_eye_detector, right_eye_detector, video_capture, images, source_resolution) 
+    return (model, face_detector, open_eyes_detector, left_eye_detector, right_eye_detector, video_capture, source_resolution) 
 
 
 
@@ -221,13 +215,13 @@ def detect_and_display(model, video_capture, face_detector, open_eyes_detector, 
                 # Display c_id
                 y = y - 15 if y - 15 > 15 else y + 15
                 cv2.putText(frame, c_id, (x, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
-                c.execute("SELECT C_ID FROM attendance WHERE DATE = '%s' " %d)
+                c.execute("SELECT C_ID FROM attendance WHERE DATE = ? " , (d, ))
                 flag = 0
                 for row in c.fetchall():
                     if row[0] == c_id or c_id == "Unknown":
                         flag = 1
                 if flag != 1 : 
-                    c.execute(''' INSERT INTO attendance (DATE, C_ID, ATTEND) VALUES(?, ?, ?); ''', (d, c_id, "True"))
+                    c.execute(''' INSERT INTO attendance (DATE, C_ID, ATTEND) VALUES(?, ?, ?); ''', (d, c_id, "True", ))
                     winsound.Beep(1000, 500)
                 conn.commit()
         return frame
@@ -238,7 +232,7 @@ def detect_and_display(model, video_capture, face_detector, open_eyes_detector, 
 if __name__ == "__main__":
     print("[LOG] Initialization...")
 
-    (model, face_detector, open_eyes_detector, left_eye_detector, right_eye_detector, video_capture, images, source_resolution) = init()
+    (model, face_detector, open_eyes_detector, left_eye_detector, right_eye_detector, video_capture, source_resolution) = init()
     
     with open('dataset_faces.dat', 'rb') as f:
         known_encodings = pickle.load(f)
@@ -275,7 +269,7 @@ if __name__ == "__main__":
     for x in c.fetchall():
         ls1.append(x[0])
 
-    c.execute("SELECT C_ID FROM attendance")
+    c.execute("SELECT C_ID FROM attendance WHERE DATE = ?", (d, ))
     for y in c.fetchall():
         ls2.append(y[0])
 

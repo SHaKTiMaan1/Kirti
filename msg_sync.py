@@ -1,8 +1,6 @@
 import sqlite3
-import datetime
 import pymongo
 import time
-from datetime import datetime
 
 # t = time()*1000 #milliseconds
 # f = open("last_time.txt", "w+")
@@ -12,7 +10,7 @@ conn = sqlite3.connect('child.db')
 c = conn.cursor()
 
 client_web = pymongo.MongoClient(
-    "mongodb+srv://CCI:root@cluster0.4gzmr.mongodb.net/Jhansi?retryWrites=true&w=majority")
+    "mongodb+srv://CCI:root@cluster0.4gzmr.mongodb.net/CARE?retryWrites=true&w=majority")
 db = client_web["CARE"]
 col = db["messages"]
 

@@ -68,7 +68,7 @@ while len(l)>0:
         if result.modified_count > 0:
             l.clear()
             c.execute(
-                " UPDATE attendance SET SYNCED = 'True' WHERE DATE != '%s' " % d)
+                " UPDATE attendance SET SYNCED = 'True' WHERE DATE != '%s' ", % d)
         conn.commit()
     else:
         time.sleep(20)

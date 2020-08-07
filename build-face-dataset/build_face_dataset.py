@@ -13,11 +13,11 @@ known_c_ids = []
 while (ch == "Y") or (ch == "y"):
 	conn = sqlite3.connect("child.db")
 	c = conn.cursor()
-	c.execute(''' SELECT rowid ,C_ID FROM details WHERE SET_EXIST = "False" ''')
+	c.execute(''' SELECT rowid ,C_ID FROM details WHERE SET_EXIST IS NULL ''')
 	for row in c.fetchall():
 		print(row)
 	val = int(input().strip())
-	c.execute(''' SELECT rowid ,C_ID FROM details WHERE SET_EXIST = "False" ''')
+	c.execute(''' SELECT rowid ,C_ID FROM details WHERE SET_EXIST IS NULL ''')
 	for row in c.fetchall():
 		if val == row[0]:
 			c_id = row[1]
@@ -78,8 +78,9 @@ while (ch == "Y") or (ch == "y"):
 			total += 1
 
 		elif total == 10:
+			cv2.destroyAllWindows()
 			break
-	c.execute("UPDATE details SET SET_EXIST = 'True' WHERE C_ID = '%s'" % c_id)
+	c.execute("UPDATE details SET SET_EXIST = 'True' WHERE C_ID = ?" , (c_id, ))
 	# do a bit of cleanup
 	print("[INFO] {} face images stored".format(total))
 	print("[INFO] cleaning up...")
@@ -105,7 +106,6 @@ while (ch == "Y") or (ch == "y"):
 			with open('dataset_c_ids.dat', 'wb') as f:
 				pickle.dump(known_c_ids, f)
 
-	cv2.destroyAllWindows()
 	vs.stop()
 	conn.commit()
 	print("Wanna add more? Press Y/y. Press any other key to stop")
